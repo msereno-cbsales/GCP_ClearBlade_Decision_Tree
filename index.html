@@ -6,9 +6,12 @@
 <title>ClearBlade × Gemini Enterprise — Co-Sell Navigator</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Google+Sans+Flex:wght@400..800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
   :root{
+    --font-head:"Google Sans Flex","Google Sans","Roboto","Segoe UI",system-ui,sans-serif;
+    --font-body:"Google Sans Flex","Google Sans","Roboto","Segoe UI",system-ui,sans-serif;
     --ink:#1a1d1c; --ink2:#42504c; --line:#dfe3df;
     --bg:#f6f6f2; --panel:#ffffff; --panel2:#eef1ec;
     --teal:#1f7a5c; --teal-bright:#42B395; --mint:#27EBAF;
@@ -20,7 +23,7 @@
   }
   *{box-sizing:border-box;margin:0;padding:0}
   body{
-    font-family:'IBM Plex Sans',system-ui,sans-serif;color:var(--ink);
+    font-family:var(--font-body);color:var(--ink);
     background:
       radial-gradient(1200px 600px at 12% -8%, #e9f5ef 0%, transparent 55%),
       radial-gradient(1000px 520px at 100% 0%, #eaf0fb 0%, transparent 50%),
@@ -28,28 +31,34 @@
     min-height:100vh;line-height:1.5;-webkit-font-smoothing:antialiased;
   }
   .wrap{max-width:1060px;margin:0 auto;padding:30px 24px 80px}
+
+  /* Header */
   header{margin-bottom:26px}
-  .eyebrow{display:flex;align-items:center;gap:10px;font:600 12px/1 'IBM Plex Mono',monospace;
+  .eyebrow{display:flex;align-items:center;gap:10px;font:600 12px/1 var(--font-head);
     letter-spacing:.14em;text-transform:uppercase;color:var(--ink2)}
   .gdots{display:inline-flex;gap:3px}
   .gdots i{width:8px;height:8px;border-radius:50%}
   .gdots i:nth-child(1){background:#4285F4}.gdots i:nth-child(2){background:#EA4335}
   .gdots i:nth-child(3){background:#FBBC05}.gdots i:nth-child(4){background:#34A853}
-  h1{font-family:'Bricolage Grotesque',sans-serif;font-weight:800;font-size:34px;letter-spacing:-.02em;
+  h1{font-family:var(--font-head);font-weight:800;font-size:34px;letter-spacing:-.02em;
     margin:12px 0 4px;line-height:1.05}
   h1 .x{color:var(--teal-bright)}
   .sub{color:var(--ink2);font-size:15px;max-width:680px}
+
+  /* Company bar */
   .cobar{display:flex;align-items:center;gap:12px;flex-wrap:wrap;
     background:var(--panel);border:1px solid var(--line);border-radius:14px;
     padding:12px 16px;margin:20px 0 10px;box-shadow:var(--shadow)}
-  .cobar label{font:600 13px 'IBM Plex Mono',monospace;color:var(--ink2);text-transform:uppercase;letter-spacing:.08em}
+  .cobar label{font:600 13px var(--font-head);color:var(--ink2);text-transform:uppercase;letter-spacing:.08em}
   .cobar input{flex:1;min-width:180px;border:none;border-bottom:2px solid var(--line);
-    background:transparent;font:600 17px 'IBM Plex Sans';color:var(--ink);padding:6px 2px;outline:none}
+    background:transparent;font:600 17px var(--font-body);color:var(--ink);padding:6px 2px;outline:none}
   .cobar input:focus{border-color:var(--teal-bright)}
+
+  /* Breadcrumb */
   .crumbs{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:18px 0 22px;font-size:13px}
   .crumb{display:flex;align-items:center;gap:7px;border:1px solid var(--line);background:var(--panel);
     border-radius:999px;padding:6px 13px;color:var(--ink2);font-weight:600;transition:.15s}
-  .crumb .n{font:700 11px 'IBM Plex Mono';color:#fff;background:var(--ink2);border-radius:50%;
+  .crumb .n{font:700 11px var(--font-head);color:#fff;background:var(--ink2);border-radius:50%;
     width:18px;height:18px;display:grid;place-items:center}
   .crumb.done{color:var(--teal);border-color:#bfe3d4;background:#eefaf4;cursor:pointer}
   .crumb.done .n{background:var(--teal)}
@@ -57,45 +66,50 @@
   .crumb.active .n{background:var(--teal-bright)}
   .crumb .v{max-width:190px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
   .sep{color:var(--line);font-weight:700}
+
   .step{animation:rise .35s ease both}
   @keyframes rise{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
-  .qline{font-family:'Bricolage Grotesque';font-weight:700;font-size:20px;margin:4px 0 16px;letter-spacing:-.01em}
-  .qline small{display:block;font-family:'IBM Plex Sans';font-weight:400;font-size:13.5px;color:var(--ink2);margin-top:3px}
+  .qline{font-family:var(--font-head);font-weight:700;font-size:20px;margin:4px 0 16px;letter-spacing:-.01em}
+  .qline small{display:block;font-family:var(--font-body);font-weight:400;font-size:13.5px;color:var(--ink2);margin-top:3px}
+
   .grid{display:grid;gap:12px}
   .g3{grid-template-columns:repeat(3,1fr)}
   .g2{grid-template-columns:repeat(2,1fr)}
   @media(max-width:720px){.g3,.g2{grid-template-columns:1fr}}
+
   .card{position:relative;text-align:left;border:1px solid var(--line);background:var(--panel);
     border-radius:var(--radius);padding:18px 18px 16px;cursor:pointer;transition:.16s;box-shadow:var(--shadow);
     font-family:inherit;color:inherit}
   .card:hover{transform:translateY(-2px);border-color:var(--teal-bright);box-shadow:0 6px 22px rgba(31,122,92,.14)}
   .card .ic{font-size:22px;line-height:1}
-  .card .ct{font-family:'Bricolage Grotesque';font-weight:700;font-size:16.5px;margin:10px 0 4px}
+  .card .ct{font-family:var(--font-head);font-weight:700;font-size:16.5px;margin:10px 0 4px}
   .card .cd{font-size:12.5px;color:var(--ink2)}
   .card .arrow{position:absolute;right:16px;top:18px;color:var(--teal-bright);opacity:0;transition:.16s;font-weight:700}
   .card:hover .arrow{opacity:1;transform:translateX(2px)}
-  .badge-role{display:inline-block;font:600 10.5px 'IBM Plex Mono';letter-spacing:.06em;text-transform:uppercase;
+  .badge-role{display:inline-block;font:600 10.5px var(--font-head);letter-spacing:.06em;text-transform:uppercase;
     padding:3px 8px;border-radius:6px;margin-top:10px}
   .b-tech{background:var(--tech-soft);color:var(--tech)}
   .b-value{background:var(--value-soft);color:var(--value)}
+
+  /* Output */
   .out{border:1px solid var(--line);border-radius:20px;overflow:hidden;box-shadow:var(--shadow);background:var(--panel)}
   .out .top{padding:22px 26px;background:linear-gradient(135deg,#15201c,#1f3b30);color:#eafff6}
-  .out .otag{display:inline-flex;align-items:center;gap:8px;font:700 11px 'IBM Plex Mono';letter-spacing:.1em;
+  .out .otag{display:inline-flex;align-items:center;gap:8px;font:700 11px var(--font-head);letter-spacing:.1em;
     text-transform:uppercase;padding:5px 12px;border-radius:999px;margin-bottom:14px}
   .otag.t-tech{background:rgba(133,178,255,.22);color:#bcd3ff;border:1px solid rgba(133,178,255,.4)}
   .otag.t-value{background:rgba(39,235,175,.18);color:var(--mint);border:1px solid rgba(39,235,175,.4)}
-  .out .ctx{font:600 12px 'IBM Plex Mono';color:#8fb9a9;letter-spacing:.04em;margin-bottom:8px}
-  .out .pitch{font-family:'Bricolage Grotesque';font-weight:700;font-size:22px;line-height:1.28;letter-spacing:-.01em}
+  .out .ctx{font:600 12px var(--font-head);color:#8fb9a9;letter-spacing:.04em;margin-bottom:8px}
+  .out .pitch{font-family:var(--font-head);font-weight:700;font-size:22px;line-height:1.28;letter-spacing:-.01em}
   .out .pitch b{color:var(--mint);font-weight:800}
   .out .body{padding:8px 26px 24px}
   .row{display:flex;gap:14px;padding:15px 0;border-bottom:1px solid var(--line)}
   .row:last-child{border-bottom:none}
-  .row .k{flex:0 0 168px;font:700 11px 'IBM Plex Mono';text-transform:uppercase;letter-spacing:.07em;color:var(--ink2);padding-top:2px}
+  .row .k{flex:0 0 168px;font:700 11px var(--font-head);text-transform:uppercase;letter-spacing:.07em;color:var(--ink2);padding-top:2px}
   .row .val{flex:1;font-size:14.5px}
   .row .val .tagi{display:inline-block;background:var(--panel2);border:1px solid var(--line);border-radius:7px;
     padding:3px 9px;margin:0 6px 6px 0;font-size:12.5px;font-weight:600}
   .ge .tagi{background:var(--g-blue-soft);border-color:#cfe0fb;color:var(--g-blue)}
-  .skuchip{display:inline-block;font:700 14px 'IBM Plex Sans';padding:5px 13px;border-radius:9px;margin:0 8px 6px 0;vertical-align:middle}
+  .skuchip{display:inline-block;font:700 14px var(--font-body);padding:5px 13px;border-radius:9px;margin:0 8px 6px 0;vertical-align:middle}
   .sku-core{background:#e8f0fe;color:#1a56c4;border:1px solid #cfe0fb}
   .sku-ia{background:#e3f4ec;color:#1f7a5c;border:1px solid #bfe3d4}
   .sku-edge{background:#efe9ff;color:#5a3fc0;border:1px solid #d8ccff}
@@ -108,11 +122,13 @@
   .refnote{font-size:12px;color:var(--ink2);margin-top:4px}
   .pill-named{color:var(--teal);font-weight:700}
   .pill-analog{color:#9a6a14;font-weight:700}
+
   .actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:20px}
   .btn{font-family:inherit;font-weight:700;font-size:13.5px;border-radius:10px;padding:11px 18px;cursor:pointer;border:1px solid var(--line);background:var(--panel);color:var(--ink);transition:.15s}
   .btn:hover{border-color:var(--teal-bright)}
   .btn.primary{background:var(--ink);color:#fff;border-color:var(--ink)}
   .btn.primary:hover{background:#000}
+
   .guide{margin-top:26px;border:1px dashed #c7d6cf;background:#f1f7f4;border-radius:14px;padding:16px 18px;font-size:13px;color:var(--ink2)}
   .guide b{color:var(--teal)}
   footer{margin-top:30px;font-size:11.5px;color:#8a958f;line-height:1.6}
@@ -142,6 +158,7 @@
 </div>
 
 <script>
+/* ---------- Grounded data ---------- */
 const INDUSTRIES = [
   {id:"energy", ic:"⚡", name:"Energy & Utilities", desc:"Oil & gas, renewables, power, water"},
   {id:"mfg", ic:"🏭", name:"Manufacturing", desc:"Metals, process, smart factory, connected products"},
@@ -221,13 +238,15 @@ const SUBS = {
 };
 
 const GENERIC_ROLES = [
-  {id:"cloud",name:"Cloud Architect",ic:"☁️",type:"tech",lens:"tech-cloud",desc:"Owns the data/AI architecture on GCP"},
-  {id:"it",name:"IT",ic:"🖥️",type:"tech",lens:"tech-it",desc:"Owns systems, integration and run-cost"},
-  {id:"ot",name:"OT",ic:"🛠️",type:"value",lens:"ot",desc:"Owns the plant floor / controls"},
-  {id:"engdir",name:"Engineering Director",ic:"📐",type:"value",lens:"engdir",desc:"Owns reliability & cross-site performance"},
-  {id:"plant",name:"Plant Manager",ic:"🏗️",type:"value",lens:"plant",desc:"Owns uptime, OEE and throughput"}
+  {id:"cloud",name:"Cloud Architect",ic:"☁️",type:"tech",desc:"Owns the data/AI architecture on GCP"},
+  {id:"it",name:"IT",ic:"🖥️",type:"tech",desc:"Owns systems, integration and run-cost"},
+  {id:"ot",name:"OT",ic:"🛠️",type:"value",desc:"Owns the plant floor / controls"},
+  {id:"engdir",name:"Engineering Director",ic:"📐",type:"value",desc:"Owns reliability & cross-site performance"},
+  {id:"plant",name:"Plant Manager",ic:"🏗️",type:"value",desc:"Owns uptime, OEE and throughput"}
 ];
 
+/* Energy sub-vertical titles — common roles that engage IoT/cloud, drawn from
+   public job postings & industry sources (LinkedIn is login-walled). */
 const ENERGY_ROLES = {
   midstream:[
     {name:"Director, Operations Technology (OT/IT)",desc:"Owns the converged OT/IT stack & digital roadmap",type:"tech",lens:"tech-cloud"},
@@ -272,22 +291,26 @@ function rolesFor(){
   return GENERIC_ROLES;
 }
 
+/* One SKU per title — IoT Core+ / Intelligent Assets / Edge AI. Descriptions per clearblade.com product pages. */
 const SKU = {
-  core:{name:"IoT Core+", cls:"sku-core", desc:"Unified, enterprise-grade IoT software that connects devices, unifies data, and ingests from any device into Google Cloud."},
-  ia:{name:"Intelligent Assets", cls:"sku-ia", desc:"No-code, AI-powered digital twin that turns machine data into a live view to monitor, command and control assets."},
-  edge:{name:"Edge AI", cls:"sku-edge", desc:"Runs AI at the edge for ultra-fast detection and response — acting on data instantly, even offline."}
+  core:{name:"IoT Core+", cls:"sku-core",
+    desc:"Unified, enterprise-grade IoT software that connects devices, unifies data, and ingests from any device into Google Cloud."},
+  ia:{name:"Intelligent Assets", cls:"sku-ia",
+    desc:"No-code, AI-powered digital twin that turns machine data into a live view to monitor, command and control assets."},
+  edge:{name:"Edge AI", cls:"sku-edge",
+    desc:"Runs AI at the edge for ultra-fast detection and response — acting on data instantly, even offline."}
 };
-
 function skuFor(role){
   const lens = role.lens || role.id;
-  if(lens==='tech-controls'||lens==='ot') return SKU.edge;
-  if(lens==='value-ops'||lens==='value-asset'||lens==='value-exec'||lens==='engdir'||lens==='plant') return SKU.ia;
-  return SKU.core;
+  if(lens==='tech-controls' || lens==='ot') return SKU.edge;
+  if(lens==='value-ops' || lens==='value-asset' || lens==='value-exec' || lens==='engdir' || lens==='plant') return SKU.ia;
+  return SKU.core; // tech-cloud, tech-it, cloud, it
 }
 
 const STAT = "Predictive maintenance can cut unplanned downtime by ~50%, and unplanned downtime costs industrial firms ~11% of annual revenue. (Siemens, True Cost of Downtime 2024)";
 
-function assetsStr(a){ if(a.length<=2) return a.join(" and "); return a.slice(0,2).join(", ")+" and other assets"; }
+/* ---------- Play generation (role lens over sub-vertical) ---------- */
+function assetsStr(a){ if(a.length<=2) return a.join(" and "); return a.slice(0,2).join(", ")+" and other "+ "assets"; }
 function fullAssets(a){ return a.join(", "); }
 
 function buildPlay(sub, role, co){
@@ -345,6 +368,7 @@ function buildPlay(sub, role, co){
   return {pitch,opener,ge,geTags,emphasis};
 }
 
+/* ---------- State + render ---------- */
 let state={industry:null,sub:null,role:null,company:""};
 const stage=document.getElementById('stage');
 const crumbsEl=document.getElementById('crumbs');
@@ -356,11 +380,11 @@ function crumb(n,label,val,status,go){
   c.innerHTML=`<span class="n">${n}</span><span class="v">${val||label}</span>`;
   return c;
 }
-
 function renderCrumbs(){
   crumbsEl.innerHTML='';
   const ind=state.industry?INDUSTRIES.find(i=>i.id===state.industry):null;
-  const sub=state.sub, role=state.role||null;
+  const sub=state.sub;
+  const role=state.role||null;
   const items=[
     {n:1,label:'Industry',val:ind?ind.name:null,done:!!ind,go:()=>{state.sub=null;state.role=null;render();}},
     {n:2,label:'Sub-vertical',val:sub?sub.name:null,done:!!sub,go:()=>{state.role=null;render();}},
@@ -378,7 +402,8 @@ function renderCrumbs(){
 }
 
 function render(){
-  renderCrumbs(); stage.innerHTML='';
+  renderCrumbs();
+  stage.innerHTML='';
   const step=document.createElement('div'); step.className='step';
   if(!state.industry){ step.appendChild(stepIndustry()); }
   else if(!state.sub){ step.appendChild(stepSub()); }
@@ -401,7 +426,6 @@ function stepIndustry(){
   f.appendChild(gridOf(INDUSTRIES.map(i=>makeCard(i.ic,i.name,i.desc,'',()=>{state.industry=i.id;state.sub=null;state.role=null;render();})),'g2'));
   return f;
 }
-
 function stepSub(){
   const f=document.createDocumentFragment();
   const ind=INDUSTRIES.find(i=>i.id===state.industry);
@@ -415,12 +439,11 @@ function stepSub(){
   f.appendChild(gridOf(cards,'g2'));
   return f;
 }
-
 function stepRole(){
   const f=document.createDocumentFragment();
   const list=rolesFor();
   const energy = state.industry==='energy';
-  f.appendChild(ql("Who are you in front of?",(energy?"Common titles in this sub-vertical that engage IoT / cloud. ":"")+"Technical roles get a technology outcome; operations roles get a use-case value prop."));
+  f.appendChild(ql("Who are you in front of?", (energy?"Common titles in this sub-vertical that engage IoT / cloud. ":"")+"Technical roles get a technology outcome; operations roles get a use-case value prop."));
   const cards=list.map(r=>{
     const tag = r.type==='tech'
       ? `<span class="badge-role b-tech">→ Technology outcome</span>`
@@ -441,6 +464,7 @@ function stepOut(){
   const sku=skuFor(role);
   const typeLabel = role.type==='tech'?'Technology outcome':'Use-case value prop';
   const typeClass = role.type==='tech'?'t-tech':'t-value';
+
   const out=document.createElement('div'); out.className='out';
   const refClass = sub.refStatus==='named'?'pill-named':'pill-analog';
   const refLbl = sub.refStatus==='named'?'Proof point':'Nearest reference';
@@ -459,6 +483,7 @@ function stepOut(){
       <div class="row"><div class="k">Conversation opener</div><div class="val"><div class="opener">"${play.opener}"</div>${sub.pm && role.type==='value'?`<div class="stat">${STAT}</div>`:''}</div></div>
     </div>`;
   f.appendChild(out);
+
   const act=document.createElement('div'); act.className='actions';
   const back=document.createElement('button'); back.className='btn'; back.textContent='← Change role'; back.onclick=()=>{state.role=null;render();};
   const back2=document.createElement('button'); back2.className='btn'; back2.textContent='Change sub-vertical'; back2.onclick=()=>{state.role=null;state.sub=null;render();};
@@ -476,7 +501,7 @@ function gcpFor(sub){
 }
 
 document.getElementById('src').innerHTML =
-  "Sources: joint ClearBlade/Google session transcript (June 2026) and ClearBlade reference materials (Proven Adoption map — 275–300+ customers, 60M+ devices; named proof points). SKU descriptions (IoT Core+, Intelligent Assets, Edge AI) per clearblade.com product pages. Energy sub-vertical job titles are drawn from public job postings and industry sources. Predictive-maintenance figures attributed to Siemens, True Cost of Downtime 2024. Sub-verticals marked 'nearest analog' have no named customer on file and are grounded in the closest proven reference rather than a specific account.";
+  "Sources: joint ClearBlade/Google session transcript (June 2026) and ClearBlade reference materials (Proven Adoption map — 275–300+ customers, 60M+ devices; named proof points). SKU descriptions (IoT Core+, Intelligent Assets, Edge AI) per clearblade.com product pages. Energy sub-vertical job titles are drawn from public job postings and industry sources; LinkedIn title data is behind a login wall and was not scraped. Predictive-maintenance figures attributed to Siemens, True Cost of Downtime 2024. Sub-verticals marked “nearest analog” have no named customer on file and are grounded in the closest proven reference rather than a specific account.";
 
 render();
 </script>
