@@ -1,0 +1,508 @@
+# GCP_ClearBlade_Decision_Tree
+decision tree for Google Cloud sellers who may need to engage with ClearBlade for IoT use cases
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ClearBlade × Gemini Enterprise — Co-Sell Navigator</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#1a1d1c; --ink2:#42504c; --line:#dfe3df;
+    --bg:#f6f6f2; --panel:#ffffff; --panel2:#eef1ec;
+    --teal:#1f7a5c; --teal-bright:#42B395; --mint:#27EBAF;
+    --g-blue:#1a56c4; --g-blue-soft:#e8f0fe;
+    --tech:#1a56c4; --tech-soft:#e8f0fe;
+    --value:#1f7a5c; --value-soft:#e3f4ec;
+    --shadow:0 1px 2px rgba(26,29,28,.06),0 8px 24px rgba(26,29,28,.07);
+    --radius:16px;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{
+    font-family:'IBM Plex Sans',system-ui,sans-serif;color:var(--ink);
+    background:
+      radial-gradient(1200px 600px at 12% -8%, #e9f5ef 0%, transparent 55%),
+      radial-gradient(1000px 520px at 100% 0%, #eaf0fb 0%, transparent 50%),
+      var(--bg);
+    min-height:100vh;line-height:1.5;-webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:1060px;margin:0 auto;padding:30px 24px 80px}
+
+  /* Header */
+  header{margin-bottom:26px}
+  .eyebrow{display:flex;align-items:center;gap:10px;font:600 12px/1 'IBM Plex Mono',monospace;
+    letter-spacing:.14em;text-transform:uppercase;color:var(--ink2)}
+  .gdots{display:inline-flex;gap:3px}
+  .gdots i{width:8px;height:8px;border-radius:50%}
+  .gdots i:nth-child(1){background:#4285F4}.gdots i:nth-child(2){background:#EA4335}
+  .gdots i:nth-child(3){background:#FBBC05}.gdots i:nth-child(4){background:#34A853}
+  h1{font-family:'Bricolage Grotesque',sans-serif;font-weight:800;font-size:34px;letter-spacing:-.02em;
+    margin:12px 0 4px;line-height:1.05}
+  h1 .x{color:var(--teal-bright)}
+  .sub{color:var(--ink2);font-size:15px;max-width:680px}
+
+  /* Company bar */
+  .cobar{display:flex;align-items:center;gap:12px;flex-wrap:wrap;
+    background:var(--panel);border:1px solid var(--line);border-radius:14px;
+    padding:12px 16px;margin:20px 0 10px;box-shadow:var(--shadow)}
+  .cobar label{font:600 13px 'IBM Plex Mono',monospace;color:var(--ink2);text-transform:uppercase;letter-spacing:.08em}
+  .cobar input{flex:1;min-width:180px;border:none;border-bottom:2px solid var(--line);
+    background:transparent;font:600 17px 'IBM Plex Sans';color:var(--ink);padding:6px 2px;outline:none}
+  .cobar input:focus{border-color:var(--teal-bright)}
+
+  /* Breadcrumb */
+  .crumbs{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:18px 0 22px;font-size:13px}
+  .crumb{display:flex;align-items:center;gap:7px;border:1px solid var(--line);background:var(--panel);
+    border-radius:999px;padding:6px 13px;color:var(--ink2);font-weight:600;transition:.15s}
+  .crumb .n{font:700 11px 'IBM Plex Mono';color:#fff;background:var(--ink2);border-radius:50%;
+    width:18px;height:18px;display:grid;place-items:center}
+  .crumb.done{color:var(--teal);border-color:#bfe3d4;background:#eefaf4;cursor:pointer}
+  .crumb.done .n{background:var(--teal)}
+  .crumb.active{color:var(--ink);border-color:var(--teal-bright);background:#fff;box-shadow:0 0 0 3px #e3f4ec}
+  .crumb.active .n{background:var(--teal-bright)}
+  .crumb .v{max-width:190px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .sep{color:var(--line);font-weight:700}
+
+  .step{animation:rise .35s ease both}
+  @keyframes rise{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+  .qline{font-family:'Bricolage Grotesque';font-weight:700;font-size:20px;margin:4px 0 16px;letter-spacing:-.01em}
+  .qline small{display:block;font-family:'IBM Plex Sans';font-weight:400;font-size:13.5px;color:var(--ink2);margin-top:3px}
+
+  .grid{display:grid;gap:12px}
+  .g3{grid-template-columns:repeat(3,1fr)}
+  .g2{grid-template-columns:repeat(2,1fr)}
+  @media(max-width:720px){.g3,.g2{grid-template-columns:1fr}}
+
+  .card{position:relative;text-align:left;border:1px solid var(--line);background:var(--panel);
+    border-radius:var(--radius);padding:18px 18px 16px;cursor:pointer;transition:.16s;box-shadow:var(--shadow);
+    font-family:inherit;color:inherit}
+  .card:hover{transform:translateY(-2px);border-color:var(--teal-bright);box-shadow:0 6px 22px rgba(31,122,92,.14)}
+  .card .ic{font-size:22px;line-height:1}
+  .card .ct{font-family:'Bricolage Grotesque';font-weight:700;font-size:16.5px;margin:10px 0 4px}
+  .card .cd{font-size:12.5px;color:var(--ink2)}
+  .card .arrow{position:absolute;right:16px;top:18px;color:var(--teal-bright);opacity:0;transition:.16s;font-weight:700}
+  .card:hover .arrow{opacity:1;transform:translateX(2px)}
+  .badge-role{display:inline-block;font:600 10.5px 'IBM Plex Mono';letter-spacing:.06em;text-transform:uppercase;
+    padding:3px 8px;border-radius:6px;margin-top:10px}
+  .b-tech{background:var(--tech-soft);color:var(--tech)}
+  .b-value{background:var(--value-soft);color:var(--value)}
+
+  /* Output */
+  .out{border:1px solid var(--line);border-radius:20px;overflow:hidden;box-shadow:var(--shadow);background:var(--panel)}
+  .out .top{padding:22px 26px;background:linear-gradient(135deg,#15201c,#1f3b30);color:#eafff6}
+  .out .otag{display:inline-flex;align-items:center;gap:8px;font:700 11px 'IBM Plex Mono';letter-spacing:.1em;
+    text-transform:uppercase;padding:5px 12px;border-radius:999px;margin-bottom:14px}
+  .otag.t-tech{background:rgba(133,178,255,.22);color:#bcd3ff;border:1px solid rgba(133,178,255,.4)}
+  .otag.t-value{background:rgba(39,235,175,.18);color:var(--mint);border:1px solid rgba(39,235,175,.4)}
+  .out .ctx{font:600 12px 'IBM Plex Mono';color:#8fb9a9;letter-spacing:.04em;margin-bottom:8px}
+  .out .pitch{font-family:'Bricolage Grotesque';font-weight:700;font-size:22px;line-height:1.28;letter-spacing:-.01em}
+  .out .pitch b{color:var(--mint);font-weight:800}
+  .out .body{padding:8px 26px 24px}
+  .row{display:flex;gap:14px;padding:15px 0;border-bottom:1px solid var(--line)}
+  .row:last-child{border-bottom:none}
+  .row .k{flex:0 0 168px;font:700 11px 'IBM Plex Mono';text-transform:uppercase;letter-spacing:.07em;color:var(--ink2);padding-top:2px}
+  .row .val{flex:1;font-size:14.5px}
+  .row .val .tagi{display:inline-block;background:var(--panel2);border:1px solid var(--line);border-radius:7px;
+    padding:3px 9px;margin:0 6px 6px 0;font-size:12.5px;font-weight:600}
+  .ge .tagi{background:var(--g-blue-soft);border-color:#cfe0fb;color:var(--g-blue)}
+  .skuchip{display:inline-block;font:700 14px 'IBM Plex Sans';padding:5px 13px;border-radius:9px;margin:0 8px 6px 0;vertical-align:middle}
+  .sku-core{background:#e8f0fe;color:#1a56c4;border:1px solid #cfe0fb}
+  .sku-ia{background:#e3f4ec;color:#1f7a5c;border:1px solid #bfe3d4}
+  .sku-edge{background:#efe9ff;color:#5a3fc0;border:1px solid #d8ccff}
+  .skudesc{font-size:13px;color:var(--ink2)}
+  .func{margin-top:10px;font-size:14.5px;color:var(--ink);font-weight:500;display:flex;gap:7px;align-items:baseline}
+  .func .mk{color:var(--teal-bright);font-weight:800}
+  .opener{background:#eefaf4;border:1px solid #bfe3d4;border-radius:12px;padding:13px 16px;font-size:14.5px;
+    color:#15402f;font-style:italic}
+  .stat{font-size:12.5px;color:var(--ink2);margin-top:8px}
+  .refnote{font-size:12px;color:var(--ink2);margin-top:4px}
+  .pill-named{color:var(--teal);font-weight:700}
+  .pill-analog{color:#9a6a14;font-weight:700}
+
+  .actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:20px}
+  .btn{font-family:inherit;font-weight:700;font-size:13.5px;border-radius:10px;padding:11px 18px;cursor:pointer;border:1px solid var(--line);background:var(--panel);color:var(--ink);transition:.15s}
+  .btn:hover{border-color:var(--teal-bright)}
+  .btn.primary{background:var(--ink);color:#fff;border-color:var(--ink)}
+  .btn.primary:hover{background:#000}
+
+  .guide{margin-top:26px;border:1px dashed #c7d6cf;background:#f1f7f4;border-radius:14px;padding:16px 18px;font-size:13px;color:var(--ink2)}
+  .guide b{color:var(--teal)}
+  footer{margin-top:30px;font-size:11.5px;color:#8a958f;line-height:1.6}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="eyebrow"><span class="gdots"><i></i><i></i><i></i><i></i></span> Internal · Google Cloud CE enablement</div>
+    <h1>ClearBlade <span class="x">×</span> Gemini Enterprise — Co-Sell Navigator</h1>
+    <p class="sub">Start with the account you're selling into, walk down industry → sub-vertical → job function, and get the GCP + ClearBlade play to lead with — framed for that role.</p>
+  </header>
+
+  <div class="cobar">
+    <label for="co">Selling to</label>
+    <input id="co" type="text" placeholder="Company name (optional)" autocomplete="off">
+  </div>
+
+  <div class="crumbs" id="crumbs"></div>
+  <div id="stage"></div>
+
+  <div class="guide">
+    <b>Field reminders.</b> Sell at the cross-stream / rollup altitude (OEE across the line, asset health across the fleet) — not a single-machine UI, where point solutions out-compete us. Start narrow for the first proof of value, then expand. The CE holds the first conversation; when it's an IoT / OT-IT use case, bring in ClearBlade. Optimize for the front end that gets the most users in — that's what equips the most Gemini Enterprise seats.
+  </div>
+
+  <footer id="src"></footer>
+</div>
+
+<script>
+/* ---------- Grounded data ---------- */
+const INDUSTRIES = [
+  {id:"energy", ic:"⚡", name:"Energy & Utilities", desc:"Oil & gas, renewables, power, water"},
+  {id:"mfg", ic:"🏭", name:"Manufacturing", desc:"Metals, process, smart factory, connected products"},
+  {id:"supply", ic:"🚆", name:"Supply Chain & Transportation", desc:"Rail, fleet, logistics & material handling"},
+  {id:"bldg", ic:"🏢", name:"Buildings & Facilities", desc:"Smart buildings, HVAC, critical facilities"}
+];
+
+const SUBS = {
+  energy:[
+    {id:"midstream",name:"Oil & Gas — Midstream / Pipeline",assets:["pumps","flow meters","discharge / suction pressure","level sensors","valves"],
+     use:"monitors and remotely controls pumps, pressures and flow rates across dispersed pipeline assets, with anomaly alerts and predictive maintenance",
+     rollup:"pump station",ref:"Seawolf — field water management (Intelligent Assets monitoring pumps, discharge pressure, inventory and flow rates); pipeline & pump controls across ClearBlade's energy base",refStatus:"named",
+     prod:["Intelligent Assets","IoT Core+","Edge AI (remote sites)","Managed Services"],pm:true},
+    {id:"upstream",name:"Oil & Gas — Upstream / Production",assets:["wellhead pumps","water inventory","discharge pressure","flow rates"],
+     use:"monitors and controls field assets and field-water across remote, intermittently-connected sites",
+     rollup:"field site",ref:"Seawolf — oil-field brackish/fracking water management; oil-well drilling across ClearBlade's energy base",refStatus:"named",
+     prod:["Intelligent Assets","IoT Core+","Edge AI (disconnected ops)","Managed Services"],pm:true},
+    {id:"solar",name:"Renewables / Solar",assets:["inverters","strings","arrays"],
+     use:"surfaces live generation KPIs — energy, uptime, performance ratio, power factor and current-vs-predicted — across the array fleet",
+     rollup:"array",ref:"Solar generation KPI dashboards (energy kW, uptime, performance ratio, power factor, current vs predicted)",refStatus:"named",
+     prod:["Intelligent Assets","IoT Core+","Managed Services"],pm:false},
+    {id:"power",name:"Power & Grid / Utility Metering",assets:["meters","grid devices","power systems"],
+     use:"ingests metering and power data at fleet scale and powers management and ESG reporting",
+     rollup:"region",ref:"Power management & utility metering across ClearBlade's utility base (incl. E.ON, AES)",refStatus:"named",
+     prod:["IoT Core+","Intelligent Assets","Managed Services"],pm:false},
+    {id:"water",name:"Water & Wastewater",assets:["pumps","flow","pressure","treatment equipment"],
+     use:"monitors and controls pumps, flow, pressure and treatment equipment across distributed water sites",
+     rollup:"site",ref:"ClearBlade Water solution; water-utility & treatment deployments",refStatus:"named",
+     prod:["Intelligent Assets","IoT Core+","Edge AI","Managed Services"],pm:true}
+  ],
+  mfg:[
+    {id:"metals",name:"Metals & Heavy / Steel",assets:["furnaces","conveyors","rotating equipment","sensors"],
+     use:"runs predictive maintenance and OEE on heavy continuous-process lines from live sensor streams",
+     rollup:"line",ref:"Tata Steel — furnace & conveyor sensor streams for predictive maintenance",refStatus:"named",
+     prod:["Intelligent Assets","IoT Core+","Edge AI","Managed Services"],pm:true},
+    {id:"chem",name:"Process / Chemical",assets:["process equipment","batch / continuous lines","sensors"],
+     use:"detects process anomalies and drives OEE, predictive maintenance and emissions monitoring on process lines",
+     rollup:"unit",ref:"Nearest analog: Tata Steel (heavy continuous process) + ClearBlade Smart Factory POV (process anomaly detection, OEE)",refStatus:"analog",
+     prod:["Intelligent Assets","IoT Core+","Edge AI","Managed Services"],pm:true},
+    {id:"smart",name:"Discrete / Smart Factory",assets:["machines","PLCs","sensors","production lines"],
+     use:"delivers plant-line OEE rollup, predictive maintenance and process anomaly detection",
+     rollup:"line",ref:"ClearBlade Smart Factory POV (predictive maintenance anchor, OEE, anomaly detection); industrial-machinery deployments",refStatus:"named",
+     prod:["Intelligent Assets","IoT Core+","Edge AI","Managed Services"],pm:true},
+    {id:"products",name:"Connected Products / Appliances",assets:["deployed connected products (fleet-scale)","OTA firmware","device telemetry"],
+     use:"connects a fleet of already-deployed products at scale, handles OTA updates, and streams telemetry into product analytics — replacing a homegrown backend",
+     rollup:"product model",ref:"Rheem — connected water heating; hot-water-heater fleet on ClearBlade (archetype: Lennox X50)",refStatus:"named",
+     prod:["IoT Core+","IoT Enterprise","Managed Services","Edge AI (optional)"],pm:false}
+  ],
+  supply:[
+    {id:"rail",name:"Rail",assets:["crossings","switches","heaters","railcars"],
+     use:"monitors trackside assets and railcars and applies predictive maintenance — a live 'rail twin'",
+     rollup:"corridor",ref:"Canadian National — predictive maintenance on crossings, switches and heaters; railcar tracking & high-speed-train deployments",refStatus:"named",
+     prod:["Intelligent Assets","IoT Core+","Edge AI (trackside)","Managed Services"],pm:true},
+    {id:"fleet",name:"Fleet & Connected Vehicles",assets:["vehicles","telematics","EV systems"],
+     use:"delivers end-to-end connectivity, real-time vehicle conditions, remote commands and fleet management",
+     rollup:"fleet",ref:"ClearBlade Intelligent Vehicles solution; fleet-tracking & EV deployments",refStatus:"named",
+     prod:["IoT Core+","Edge AI (in-vehicle)","IoT Enterprise","Managed Services"],pm:false},
+    {id:"logistics",name:"Logistics & Material Handling",assets:["material-handling equipment","conveyors","sortation systems"],
+     use:"monitors equipment uptime and throughput and applies predictive maintenance to handling systems",
+     rollup:"facility",ref:"Aerospace-logistics deployments; material-handling base (incl. Dematic)",refStatus:"named",
+     prod:["Intelligent Assets","IoT Core+","Edge AI","Managed Services"],pm:true}
+  ],
+  bldg:[
+    {id:"bos",name:"Smart Buildings / BOS",assets:["building systems","sensors","meters"],
+     use:"unifies building data into a building operating system — energy, occupancy, alarms — across a portfolio",
+     rollup:"building",ref:"Google campus building operating system (Mountain View & London) — identical use case, comparable scale",refStatus:"named",
+     prod:["Intelligent Assets","IoT Core+","Edge AI","Managed Services"],pm:false},
+    {id:"hvac",name:"HVAC & Connected Equipment",assets:["HVAC units","thermostats","connected equipment"],
+     use:"streams connected-equipment telemetry, enables remote management and predictive service",
+     rollup:"site",ref:"HVAC & connected-equipment deployments (incl. Carrier, Danfoss; archetype: Lennox X50 thermostat)",refStatus:"named",
+     prod:["IoT Core+","Intelligent Assets","Managed Services"],pm:true},
+    {id:"datacenter",name:"Data Centers & Critical Facilities",assets:["power","cooling / refrigeration","fire systems"],
+     use:"monitors power, cooling and life-safety systems with real-time alarms and ESG reporting",
+     rollup:"facility",ref:"Data-center, refrigeration-control, fire-monitoring & power-management deployments",refStatus:"named",
+     prod:["Intelligent Assets","Edge AI","Managed Services"],pm:false}
+  ]
+};
+
+const GENERIC_ROLES = [
+  {id:"cloud",name:"Cloud Architect",ic:"☁️",type:"tech",desc:"Owns the data/AI architecture on GCP"},
+  {id:"it",name:"IT",ic:"🖥️",type:"tech",desc:"Owns systems, integration and run-cost"},
+  {id:"ot",name:"OT",ic:"🛠️",type:"value",desc:"Owns the plant floor / controls"},
+  {id:"engdir",name:"Engineering Director",ic:"📐",type:"value",desc:"Owns reliability & cross-site performance"},
+  {id:"plant",name:"Plant Manager",ic:"🏗️",type:"value",desc:"Owns uptime, OEE and throughput"}
+];
+
+/* Energy sub-vertical titles — common roles that engage IoT/cloud, drawn from
+   public job postings & industry sources (LinkedIn is login-walled). */
+const ENERGY_ROLES = {
+  midstream:[
+    {name:"Director, Operations Technology (OT/IT)",desc:"Owns the converged OT/IT stack & digital roadmap",type:"tech",lens:"tech-cloud"},
+    {name:"SCADA / Control Systems Manager",desc:"Owns pipeline SCADA, telemetry & control",type:"tech",lens:"tech-controls"},
+    {name:"Controls & Automation Engineer",desc:"Integrates PLCs, RTUs & field instrumentation",type:"tech",lens:"tech-controls"},
+    {name:"Gas Control / Control Room Manager",desc:"Runs real-time pipeline operations & dispatch",type:"value",lens:"value-ops"},
+    {name:"Pipeline / Asset Integrity Manager",desc:"Owns reliability & integrity of the pipeline",type:"value",lens:"value-asset"},
+    {name:"Director, Digital Transformation",desc:"Drives analytics, cloud & IoT initiatives",type:"tech",lens:"tech-cloud"}
+  ],
+  upstream:[
+    {name:"Digital Oilfield / Transformation Mgr",desc:"Owns field digitalization & data initiatives",type:"tech",lens:"tech-cloud"},
+    {name:"SCADA / Automation Engineer",desc:"Owns wellsite control, RTUs & telemetry",type:"tech",lens:"tech-controls"},
+    {name:"Operations Technology (OT) Director",desc:"Owns the field OT/IT architecture",type:"tech",lens:"tech-cloud"},
+    {name:"Production / Optimization Engineer",desc:"Owns well & production performance",type:"value",lens:"value-asset"},
+    {name:"Field Operations / Facilities Manager",desc:"Runs field sites & surface facilities",type:"value",lens:"value-ops"}
+  ],
+  solar:[
+    {name:"Renewable Asset Manager",desc:"Owns portfolio performance & returns",type:"value",lens:"value-asset"},
+    {name:"O&M / Site Operations Manager",desc:"Owns plant availability & maintenance",type:"value",lens:"value-ops"},
+    {name:"Plant Performance Engineer",desc:"Owns generation KPIs & yield",type:"value",lens:"value-asset"},
+    {name:"SCADA / Controls Engineer",desc:"Owns plant SCADA & inverter controls",type:"tech",lens:"tech-controls"},
+    {name:"Head of Digital / Data & Analytics",desc:"Owns the data platform & APM tooling",type:"tech",lens:"tech-cloud"}
+  ],
+  power:[
+    {name:"Director, Grid Operations / Modernization",desc:"Owns grid reliability & modernization",type:"value",lens:"value-ops"},
+    {name:"Head of AMI / Metering (MDMS)",desc:"Owns smart-meter data at fleet scale",type:"tech",lens:"tech-cloud"},
+    {name:"Distribution Operations / Automation Mgr",desc:"Owns distribution automation & DERs",type:"value",lens:"value-ops"},
+    {name:"OT / Grid Technology Director",desc:"Owns the grid OT/IT architecture",type:"tech",lens:"tech-cloud"},
+    {name:"DER / Smart Grid Program Manager",desc:"Owns DER, storage & EV integration programs",type:"value",lens:"value-ops"}
+  ],
+  water:[
+    {name:"SCADA / Control Systems Manager",desc:"Owns the water/wastewater SCADA system",type:"tech",lens:"tech-controls"},
+    {name:"Instrumentation & Controls (I&C) Supt.",desc:"Owns field instrumentation, PLCs & calibration",type:"tech",lens:"tech-controls"},
+    {name:"IT / OT Systems Manager",desc:"Owns systems integration & OT security",type:"tech",lens:"tech-cloud"},
+    {name:"Plant Superintendent / Ops Manager",desc:"Runs treatment-plant operations",type:"value",lens:"value-ops"},
+    {name:"Director of Water Operations / Resources",desc:"Owns multi-site operations & compliance",type:"value",lens:"value-exec"}
+  ]
+};
+
+function rolesFor(){
+  if(state.industry==='energy' && state.sub && ENERGY_ROLES[state.sub.id]) return ENERGY_ROLES[state.sub.id];
+  return GENERIC_ROLES;
+}
+
+/* One SKU per title — IoT Core+ / Intelligent Assets / Edge AI. Descriptions per clearblade.com product pages. */
+const SKU = {
+  core:{name:"IoT Core+", cls:"sku-core",
+    desc:"Unified, enterprise-grade IoT software that connects devices, unifies data, and ingests from any device into Google Cloud."},
+  ia:{name:"Intelligent Assets", cls:"sku-ia",
+    desc:"No-code, AI-powered digital twin that turns machine data into a live view to monitor, command and control assets."},
+  edge:{name:"Edge AI", cls:"sku-edge",
+    desc:"Runs AI at the edge for ultra-fast detection and response — acting on data instantly, even offline."}
+};
+function skuFor(role){
+  const lens = role.lens || role.id;
+  if(lens==='tech-controls' || lens==='ot') return SKU.edge;
+  if(lens==='value-ops' || lens==='value-asset' || lens==='value-exec' || lens==='engdir' || lens==='plant') return SKU.ia;
+  return SKU.core; // tech-cloud, tech-it, cloud, it
+}
+
+const STAT = "Predictive maintenance can cut unplanned downtime by ~50%, and unplanned downtime costs industrial firms ~11% of annual revenue. (Siemens, True Cost of Downtime 2024)";
+
+/* ---------- Play generation (role lens over sub-vertical) ---------- */
+function assetsStr(a){ if(a.length<=2) return a.join(" and "); return a.slice(0,2).join(", ")+" and other "+ "assets"; }
+function fullAssets(a){ return a.join(", "); }
+
+function buildPlay(sub, role, co){
+  const C = co && co.trim() ? co.trim() : "the customer";
+  const a2 = assetsStr(sub.assets);
+  const area = sub.name.split(' — ')[0];
+  const perf = sub.pm ? "OEE" : "performance";
+  const geTags = ["Native BigQuery agent (default)","ClearBlade MCP server in GE","Custom GE agent (large / bespoke)"];
+  const geTech = `Data lands in BigQuery, so Gemini Enterprise can speak to it. Default pattern is the native BigQuery agent; a ClearBlade MCP server or a custom GE agent fits larger or bespoke builds.`;
+  const geValue = `Operations asks Gemini Enterprise plain-language questions of the live data ("status of all assets today?"), answered from the ClearBlade dataset structured in BigQuery — and it's the front end that equips Gemini Enterprise seats across the team.`;
+  let pitch, opener, emphasis, ge;
+  const lens = role.lens || role.id;
+  switch(lens){
+    case 'tech-cloud': case 'cloud':
+      pitch=`Get ${C}'s <b>${a2}</b> streaming into Google Cloud. ClearBlade normalizes the OT/device data, lands it semantically in <b>BigQuery</b>, and Gemini Enterprise queries it — deployed on <b>GKE in ${C}'s tenancy</b>, which is immediate GCP consumption.`;
+      opener=`How is ${C} getting ${a2} data into GCP today — and can your teams ask Gemini questions of it?`;
+      emphasis=`Lead with the pipeline and consumption story: ClearBlade is the on-ramp that gets the data into GCP and queryable by Gemini Enterprise.`;
+      ge=geTech; break;
+    case 'tech-controls':
+      pitch=`Connect ${C}'s <b>${a2}</b> at the edge — without ripping out SCADA or PLCs. ClearBlade Edge normalizes and routes the control-system data locally, lands it in <b>BigQuery</b>, and Gemini Enterprise reads it: a clean OT-to-cloud path on GKE.`;
+      opener=`What would it take to get your ${fullAssets(sub.assets)} / SCADA data into one cloud-queryable place — without disrupting control?`;
+      emphasis=`Lead with non-disruptive edge integration of the existing control systems, then the GCP + Gemini Enterprise path.`;
+      ge=geTech; break;
+    case 'tech-it': case 'it':
+      pitch=`Hand ${C} a <b>fully managed IoT layer</b>. ClearBlade owns connectivity, version control, updates and schema mapping — so ${C}'s team builds product instead of running plumbing — with native integration into existing systems and into Google Cloud.`;
+      opener=`Who maintains ${C}'s device backend today — and what would your team get back if it were fully managed?`;
+      emphasis=`Lead with run-cost and integration: a turnkey, fully managed layer that maps to the existing schema.`;
+      ge=geTech; break;
+    case 'value-ops':
+      pitch=`Give ${C}'s operations a <b>single pane across every ${sub.rollup}</b> — ClearBlade ${sub.use} — with a narrow first pilot you can expand.`;
+      opener=`If you could see asset health and ${perf} across every ${sub.rollup} in one view, what decision would change first?`;
+      emphasis=`Lead with the cross-${sub.rollup} rollup and a defensible, narrow first proof of value — the sweet-spot altitude.`;
+      ge=geValue; break;
+    case 'value-asset':
+      pitch=`Catch failures before downtime — ClearBlade ${sub.use}, surfacing asset health, alerts and KPIs in real time so ${C} acts before an asset goes down.`;
+      opener=`Which asset, when it fails unplanned, costs ${C} the most — and would you know it was coming?`;
+      emphasis=`Lead with reliability and predictive-maintenance outcomes on the assets that hurt most when they stop.`;
+      ge=geValue; break;
+    case 'value-exec': case 'engdir':
+      pitch=`Give ${C} <b>one view across ${area}</b> — ClearBlade ${sub.use} — rolled up across every ${sub.rollup}, starting narrow and scaling.`;
+      opener=`If every ${sub.rollup} reported asset health and ${perf} into one place, what would you change first?`;
+      emphasis=`Lead with the portfolio rollup and a defensible pilot that expands across every ${sub.rollup}.`;
+      ge=geValue; break;
+    case 'ot':
+      pitch=`Bring ${C}'s <b>${a2}</b> online without ripping out controls. ClearBlade Edge connects and normalizes brownfield assets and PLCs locally, then ${sub.use}.`;
+      opener=`What live signal from ${fullAssets(sub.assets)} do you wish you had that your current OT stack can't give you?`;
+      emphasis=`Lead at the edge: connect brownfield assets in place, normalize and route locally, then the operational outcome below.`;
+      ge=geValue; break;
+    case 'plant': default:
+      pitch=`Catch failures before downtime on ${C}'s floor. ClearBlade ${sub.use}, surfacing asset health, alerts and KPIs in real time.`;
+      opener=`Which asset, when it goes down unplanned, costs you the most — and would you know it was coming?`;
+      emphasis=`Lead with downtime and OEE on the floor: real-time asset health and alerts that prevent unplanned stops.`;
+      ge=geValue; break;
+  }
+  return {pitch,opener,ge,geTags,emphasis};
+}
+
+/* ---------- State + render ---------- */
+let state={industry:null,sub:null,role:null,company:""};
+const stage=document.getElementById('stage');
+const crumbsEl=document.getElementById('crumbs');
+document.getElementById('co').addEventListener('input',e=>{state.company=e.target.value; if(state.role) render();});
+
+function crumb(n,label,val,status,go){
+  const c=document.createElement(go?'button':'span');
+  c.className='crumb '+status; if(go){c.onclick=go;c.style.font='inherit';c.style.cursor='pointer';}
+  c.innerHTML=`<span class="n">${n}</span><span class="v">${val||label}</span>`;
+  return c;
+}
+function renderCrumbs(){
+  crumbsEl.innerHTML='';
+  const ind=state.industry?INDUSTRIES.find(i=>i.id===state.industry):null;
+  const sub=state.sub;
+  const role=state.role||null;
+  const items=[
+    {n:1,label:'Industry',val:ind?ind.name:null,done:!!ind,go:()=>{state.sub=null;state.role=null;render();}},
+    {n:2,label:'Sub-vertical',val:sub?sub.name:null,done:!!sub,go:()=>{state.role=null;render();}},
+    {n:3,label:'Job function',val:role?role.name:null,done:!!role,go:()=>{render();}},
+    {n:4,label:'The play',val:role?'Ready':null,done:!!role}
+  ];
+  let activeSet=false;
+  items.forEach((it,idx)=>{
+    if(idx>0) crumbsEl.appendChild(Object.assign(document.createElement('span'),{className:'sep',textContent:'›'}));
+    let status='';
+    if(it.done) status='done';
+    if(!activeSet && !it.done){status='active';activeSet=true;}
+    crumbsEl.appendChild(crumb(it.n,it.label,it.val,status,it.done?it.go:null));
+  });
+}
+
+function render(){
+  renderCrumbs();
+  stage.innerHTML='';
+  const step=document.createElement('div'); step.className='step';
+  if(!state.industry){ step.appendChild(stepIndustry()); }
+  else if(!state.sub){ step.appendChild(stepSub()); }
+  else if(!state.role){ step.appendChild(stepRole()); }
+  else { step.appendChild(stepOut()); }
+  stage.appendChild(step);
+}
+
+function ql(t,s){const d=document.createElement('div');d.className='qline';d.innerHTML=t+(s?`<small>${s}</small>`:'');return d;}
+function gridOf(cards,cols){const g=document.createElement('div');g.className='grid '+cols;cards.forEach(c=>g.appendChild(c));return g;}
+function makeCard(ic,title,desc,extraHTML,onclick){
+  const b=document.createElement('button');b.className='card';b.onclick=onclick;
+  b.innerHTML=`<span class="arrow">→</span><div class="ic">${ic}</div><div class="ct">${title}</div><div class="cd">${desc||''}</div>${extraHTML||''}`;
+  return b;
+}
+
+function stepIndustry(){
+  const f=document.createDocumentFragment();
+  f.appendChild(ql("Which industry is this account in?","Pick the closest fit — sub-verticals come next."));
+  f.appendChild(gridOf(INDUSTRIES.map(i=>makeCard(i.ic,i.name,i.desc,'',()=>{state.industry=i.id;state.sub=null;state.role=null;render();})),'g2'));
+  return f;
+}
+function stepSub(){
+  const f=document.createDocumentFragment();
+  const ind=INDUSTRIES.find(i=>i.id===state.industry);
+  f.appendChild(ql(`Sub-vertical within ${ind.name}?`,"Each maps to a proven ClearBlade reference."));
+  const cards=SUBS[state.industry].map(s=>{
+    const refTag = s.refStatus==='named'
+      ? `<span class="badge-role b-value">Named reference</span>`
+      : `<span class="badge-role" style="background:#fbf1dd;color:#9a6a14">Nearest analog</span>`;
+    return makeCard("",s.name,s.use.charAt(0).toUpperCase()+s.use.slice(1),refTag,()=>{state.sub=s;state.role=null;render();});
+  });
+  f.appendChild(gridOf(cards,'g2'));
+  return f;
+}
+function stepRole(){
+  const f=document.createDocumentFragment();
+  const list=rolesFor();
+  const energy = state.industry==='energy';
+  f.appendChild(ql("Who are you in front of?", (energy?"Common titles in this sub-vertical that engage IoT / cloud. ":"")+"Technical roles get a technology outcome; operations roles get a use-case value prop."));
+  const cards=list.map(r=>{
+    const tag = r.type==='tech'
+      ? `<span class="badge-role b-tech">→ Technology outcome</span>`
+      : `<span class="badge-role b-value">→ Use-case value prop</span>`;
+    const ic = r.ic || (r.type==='tech'?'⚙️':'📈');
+    return makeCard(ic,r.name,r.desc,tag,()=>{state.role=r;render();});
+  });
+  f.appendChild(gridOf(cards,'g3'));
+  return f;
+}
+
+function stepOut(){
+  const f=document.createDocumentFragment();
+  const ind=INDUSTRIES.find(i=>i.id===state.industry);
+  const sub=state.sub, role=state.role;
+  const co=state.company && state.company.trim()?state.company.trim():"the customer";
+  const play=buildPlay(sub,role,state.company);
+  const sku=skuFor(role);
+  const typeLabel = role.type==='tech'?'Technology outcome':'Use-case value prop';
+  const typeClass = role.type==='tech'?'t-tech':'t-value';
+
+  const out=document.createElement('div'); out.className='out';
+  const refClass = sub.refStatus==='named'?'pill-named':'pill-analog';
+  const refLbl = sub.refStatus==='named'?'Proof point':'Nearest reference';
+  out.innerHTML=`
+    <div class="top">
+      <span class="otag ${typeClass}">${role.type==='tech'?'⚙︎':'◎'} ${typeLabel} · for ${role.name}</span>
+      <div class="ctx">${ind.name} › ${sub.name} › ${role.name} · selling to ${co}</div>
+      <div class="pitch">${play.pitch}</div>
+    </div>
+    <div class="body">
+      <div class="row"><div class="k">Lead with</div><div class="val">${play.emphasis}</div></div>
+      <div class="row"><div class="k">ClearBlade</div><div class="val"><span class="skuchip ${sku.cls}">${sku.name}</span> <span class="skudesc">${sku.desc}</span><div class="func"><span class="mk">▸</span><span>ClearBlade ${sub.use}.</span></div></div></div>
+      <div class="row"><div class="k">GCP tie-in</div><div class="val">${gcpFor(sub)}</div></div>
+      <div class="row ge"><div class="k">Gemini Enterprise</div><div class="val">${play.ge}<div style="margin-top:8px">${play.geTags.map(t=>`<span class="tagi">${t}</span>`).join('')}</div></div></div>
+      <div class="row"><div class="k">${refLbl}</div><div class="val"><span class="${refClass}">${sub.refStatus==='named'?'●':'◐'}</span> ${sub.ref}${sub.refStatus==='analog'?`<div class="refnote">No named ${sub.name.split(' / ').pop().toLowerCase()} customer on file — the play is grounded in the analog above, not a specific account.</div>`:''}</div></div>
+      <div class="row"><div class="k">Conversation opener</div><div class="val"><div class="opener">"${play.opener}"</div>${sub.pm && role.type==='value'?`<div class="stat">${STAT}</div>`:''}</div></div>
+    </div>`;
+  f.appendChild(out);
+
+  const act=document.createElement('div'); act.className='actions';
+  const back=document.createElement('button'); back.className='btn'; back.textContent='← Change role'; back.onclick=()=>{state.role=null;render();};
+  const back2=document.createElement('button'); back2.className='btn'; back2.textContent='Change sub-vertical'; back2.onclick=()=>{state.role=null;state.sub=null;render();};
+  const reset=document.createElement('button'); reset.className='btn primary'; reset.textContent='Start over'; reset.onclick=()=>{state.industry=null;state.sub=null;state.role=null;render();};
+  act.appendChild(back); act.appendChild(back2); act.appendChild(reset);
+  f.appendChild(act);
+  return f;
+}
+
+function gcpFor(sub){
+  const base=['Pub/Sub','BigQuery','GKE compute (in-tenant)'];
+  if(sub.pm) base.splice(2,0,'Vertex AI (anomaly models)');
+  base.push('Looker');
+  return base.map(t=>`<span class="tagi">${t}</span>`).join('');
+}
+
+document.getElementById('src').innerHTML =
+  "Sources: joint ClearBlade/Google session transcript (June 2026) and ClearBlade reference materials (Proven Adoption map — 275–300+ customers, 60M+ devices; named proof points). SKU descriptions (IoT Core+, Intelligent Assets, Edge AI) per clearblade.com product pages. Energy sub-vertical job titles are drawn from public job postings and industry sources; LinkedIn title data is behind a login wall and was not scraped. Predictive-maintenance figures attributed to Siemens, True Cost of Downtime 2024. Sub-verticals marked “nearest analog” have no named customer on file and are grounded in the closest proven reference rather than a specific account.";
+
+render();
+</script>
+</body>
+</html>
